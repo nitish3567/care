@@ -12,6 +12,7 @@ from config.tests.helper import assert_equal_dicts, mock_equal
 
 @pytest.fixture()
 def user_data():
+    
     return dict(
         username="bar",
         user_type=5,
