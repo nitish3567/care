@@ -4,7 +4,7 @@ from rest_framework import status
 from care.facility.models.ambulance import Ambulance, AmbulanceDriver
 from care.utils.tests.test_base import TestBase
 from config.tests.helper import mock_equal
-import random
+from random import randint
 
 
 class TestAmbulance(TestBase):
@@ -53,7 +53,7 @@ class TestAmbulance(TestBase):
 
 	def get_ambulance_data(self, district=None, user=None):
 		user = user or self.user
-		random_gen = random(4)
+		random_gen = randint(1000,9999)
 		return {"drivers": [
 					{
 					  "name": "Sasi Kuttan",
