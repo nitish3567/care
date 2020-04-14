@@ -52,14 +52,15 @@ class TestAmbulance(TestBase):
 
 	def get_ambulance_data(self, district=None, user=None):
 		user = user or self.user
+		random_gen = random(4)
 		return {"drivers": [
 					{
 					  "name": "Sasi Kuttan",
-					  "phone_number": "9447012345",
+					  "phone_number": "944701"+str(random_gen),
 					  "is_smart_phone": True
 					}
 				  ], 
-				  "vehicle_number": "KL32G9168",
+				  "vehicle_number": "KL32G"+str(random_gen),
 				  "owner_name": "Manorama",
 				  "owner_phone_number": "8113982231",
 				  "owner_is_smart_phone": True,
@@ -87,36 +88,46 @@ class TestAmbulance(TestBase):
 		# test response data
 
 		# Facility exists
-		ambulance = Ambulance.objects.filter(vehicle_number="KL13AB1234").first()
+		ambulance = Ambulance.objects.filter(vehicle_number=data["vehicle_number"]).first()
 		self.assertIsNotNone(ambulance)
 		self.assertEqual(response.json()["vehicle_number"], ambulance.vehicle_number)
 
-	def test_retrieve(self):
+	def test_retrieve_ambulance(self):
 		"""Test ambulance data is returned as expected"""
-		stats_data = self.get_ambulance_data()
-		del stats_data['drivers']
-		stats_data['vehicle_number'] = "KL13AB1235"
-		stats_data['primary_district'] = self.district
-		stats_data['secondary_district'] = self.district
-		stats_data['third_district'] = self.district
-		obj = Ambulance.objects.create(**stats_data)
-		response = self.client.get(self.get_url(entry_id=obj.id), format="json")
+		# stats_data = self.get_ambulance_data()
+		# del stats_data['drivers']
+		# stats_data['vehicle_number'] = "KL13AB1235"
+		# stats_data['primary_district'] = self.district
+		# stats_data['secondary_district'] = self.district
+		# stats_data['third_district'] = self.district
+		# obj = Ambulance.objects.create(**stats_data)
+
+		data = self.get_ambulance_data()
+		response = self.client.post(self.get_url()+'create/', data, format="json")
+
+		ambulanceid = response.json()["id"]
+
+		response = self.client.get(self.get_url(entry_id=ambulanceid), format="json")
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 	def test_destroy_ambulance(self):
 		"""Test ambulance data is deleted as expected"""
-		stats_data = self.get_ambulance_data()
-		del stats_data['drivers']
-		stats_data['vehicle_number'] = "KL13AB1236"
-		stats_data['primary_district'] = self.district
-		stats_data['secondary_district'] = self.district
-		stats_data['third_district'] = self.district
-		obj = Ambulance.objects.create(**stats_data)
-		count = Ambulance.objects.filter(owner_phone_number="8888888888",).count()
-		response = self.client.delete(self.get_url(entry_id=obj.id))
+		# stats_data = self.get_ambulance_data()
+		# del stats_data['drivers']
+		# stats_data['vehicle_number'] = "KL13AB1236"
+		# stats_data['primary_district'] = self.district
+		# stats_data['secondary_district'] = self.district
+		# stats_data['third_district'] = self.district
+		# obj = Ambulance.objects.create(**stats_data)
+
+		data = self.get_ambulance_data()
+		response = self.client.post(self.get_url()+'create/', data, format="json")
+		allcount = Ambulance.objects.filter(owner_phone_number=data["owner_phone_number"]).count()
+		ambulanceid = response.json()["id"]		
+		response = self.client.delete(self.get_url(entry_id=ambulanceid))
 		self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 		self.assertEqual(
-			Ambulance.objects.filter(owner_phone_number="8888888888",).count(), count - 1,
+			allcount, allcount - 1,
 		)
 
 	def test_create_ambulance_driver(self):
