@@ -4,6 +4,7 @@ from rest_framework import status
 from care.facility.models.ambulance import Ambulance, AmbulanceDriver
 from care.utils.tests.test_base import TestBase
 from config.tests.helper import mock_equal
+import random
 
 
 class TestAmbulance(TestBase):
