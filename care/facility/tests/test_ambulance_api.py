@@ -113,10 +113,14 @@ class TestAmbulance(TestBase):
 		# print("ambulanceid="+str(ambulanceid))
 
 		serializer = AmbulanceSerializer(data=data)
-		print(serializer)
-
-		# response = self.client.get(self.get_url(entry_id=ambulanceid), format="json")
-		# self.assertEqual(response.status_code, status.HTTP_200_OK)
+		if serializer.is_valid():
+			serializer.save()
+			ambulance_obj = serializer.data
+			ambulanceid = ambulance_obj["id"]
+			response = self.client.get(self.get_url(entry_id=ambulanceid), format="json")
+			self.assertEqual(response.status_code, status.HTTP_200_OK)
+		else:
+			self.assertEqual(500, status.HTTP_200_OK)
 
 	def test_destroy_ambulance(self):
 		"""Test ambulance data is deleted as expected"""
