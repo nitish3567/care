@@ -2,6 +2,7 @@ from typing import Any
 
 from rest_framework import status
 from care.facility.models.ambulance import Ambulance, AmbulanceDriver
+from care.facility.api.serializers.ambulance import AmbulanceSerializer
 from care.utils.tests.test_base import TestBase
 from config.tests.helper import mock_equal
 from random import randint
@@ -103,14 +104,19 @@ class TestAmbulance(TestBase):
 		# stats_data['third_district'] = self.district
 		# obj = Ambulance.objects.create(**stats_data)
 
+
+
 		data = self.get_ambulance_data()
-		response = self.client.post(self.get_url()+'create/', data, format="json")
+		# response = self.client.post(self.get_url()+'create/', data, format="json")
 
-		ambulanceid = response.json()["id"]
-		print("ambulanceid="+str(ambulanceid))
+		# ambulanceid = response.json()["id"]
+		# print("ambulanceid="+str(ambulanceid))
 
-		response = self.client.get(self.get_url(entry_id=ambulanceid), format="json")
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		serializer = AmbulanceSerializer(data=data)
+		print(serializer)
+
+		# response = self.client.get(self.get_url(entry_id=ambulanceid), format="json")
+		# self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 	def test_destroy_ambulance(self):
 		"""Test ambulance data is deleted as expected"""
