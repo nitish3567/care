@@ -107,6 +107,7 @@ class TestAmbulance(TestBase):
 		response = self.client.post(self.get_url()+'create/', data, format="json")
 
 		ambulanceid = response.json()["id"]
+		print("ambulanceid="+str(ambulanceid))
 
 		response = self.client.get(self.get_url(entry_id=ambulanceid), format="json")
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
