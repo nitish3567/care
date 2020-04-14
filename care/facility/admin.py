@@ -19,6 +19,7 @@ from .models import (
     PatientRegistration,
     Room,
     StaffRoomAllocation,
+    PatientMetaInfo,
 )
 
 
@@ -160,3 +161,4 @@ admin.site.register(PatientRegistration, PatientAdmin)
 admin.site.register(PatientTeleConsultation)
 admin.site.register(PatientSample, PatientSampleAdmin)
 admin.site.register(Disease)
+admin.site.register(PatientMetaInfo)
