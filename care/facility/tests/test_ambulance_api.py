@@ -138,9 +138,7 @@ class TestAmbulance(TestBase):
 		ambulanceid = response.json()["id"]		
 		response = self.client.delete(self.get_url(entry_id=ambulanceid))
 		self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-		self.assertEqual(
-			allcount, allcount - 1,
-		)
+		
 
 	def test_create_ambulance_driver(self):
 		stats_data = self.get_ambulance_data()
