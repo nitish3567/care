@@ -1,7 +1,7 @@
 from typing import Any
 
 from rest_framework import status
-from care.facility.models.ambulance import Ambulance, AmbulanceDriver
+from care.facility.models.facility import Ambulance, AmbulanceDriver
 from care.utils.tests.test_base import TestBase
 from config.tests.helper import mock_equal
 
