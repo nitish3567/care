@@ -4,7 +4,7 @@ Base settings to build other settings files upon.
 
 import json
 from datetime import timedelta
-
+from logging import INFO
 import environ
 
 ROOT_DIR = environ.Path(__file__) - 3  # (care/config/settings/base.py - 3 = care/)
@@ -91,6 +91,7 @@ THIRD_PARTY_APPS = [
     "djangoql",
     "maintenance_mode",
     "django.contrib.postgres",
+    "automated_logging",
 ]
 
 LOCAL_APPS = ["care.users.apps.UsersConfig", "care.facility"]
@@ -154,6 +155,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
     "maintenance_mode.middleware.MaintenanceModeMiddleware",
+    "automated_logging.middleware.AutomatedLoggingMiddleware",
 ]
 
 # STATIC
@@ -256,12 +258,58 @@ MANAGERS = ADMINS
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "formatters": {"verbose": {"format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"}},
+#     "handlers": {"console": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "verbose",}},
+#     "root": {"level": "INFO", "handlers": ["console"]},
+# }
+
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {"verbose": {"format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"}},
-    "handlers": {"console": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "verbose",}},
-    "root": {"level": "INFO", "handlers": ["console"]},
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG", "class": "logging.StreamHandler", "formatter": "verbose",
+        },
+        'db': {
+            'level': 'INFO',
+            'class': 'automated_logging.handlers.DatabaseHandler',
+        }
+    },
+    'loggers': {
+        'automated_logging': {
+            'level': 'INFO',
+            'handlers': ['db'],
+            'propagate': True,
+        },
+        'django': {
+            'level': 'INFO',
+            'handlers': ['db'],
+            'propagate': True,
+        },
+    }    
+}
+
+AUTOMATED_LOGGING = {
+    'exclude': {'model': ['admin', 'session', 'automated_logging', 'basehttp', 'contenttypes', 'migrations'],
+                'request': ['GET', 200],
+                'unspecified': []},
+    'modules': ['request', 'model', 'unspecified'],
+    'to_database': True,
+    'loglevel': {'model': INFO,
+                 'request': INFO},
+    'save_na': True,
+    'request': {
+      'query': False
+    }
 }
 
 # django-allauth
