@@ -5,7 +5,8 @@ class UserAccessMixin:
     def get_queryset(self):
         queryset = self.queryset
         model = self.queryset.__dict__["model"]
-        print("queryset_outer="+queryset)
+        print("outerquery")
+        print(queryset)
 
         if not self.request.user.is_superuser:
             instance = model()
@@ -17,7 +18,8 @@ class UserAccessMixin:
             else:
                 if hasattr(instance, "created_by"):
                     queryset = queryset.filter(created_by=self.request.user)
-                    print("queryset_inner="+queryset)
+                    print("innerquery")
+                    print(queryset)
 
         return queryset
 
