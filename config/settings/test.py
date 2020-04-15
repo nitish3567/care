@@ -47,3 +47,5 @@ INSTALLED_APPS += [  # noqa F405
 ]
 
 DATABASES = {"default": {"ENGINE": "django.contrib.gis.db.backends.spatialite", "ATOMIC_REQUESTS": False}}
+
+LOGGING_CONFIG = None
