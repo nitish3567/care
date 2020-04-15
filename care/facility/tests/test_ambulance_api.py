@@ -18,6 +18,9 @@ class TestAmbulance(TestBase):
 		"""
 		super(TestAmbulance, cls).setUpClass()
 
+	# def setup(self):
+	# 	self.client.force_login(self.super_user)
+
 	def get_base_url(self):
 		return "/api/v1/ambulance"
 
