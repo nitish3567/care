@@ -4,9 +4,7 @@ from care.users.models import User
 class UserAccessMixin:
     def get_queryset(self):
         queryset = self.queryset
-        model = self.queryset.__dict__["model"]
-        print("outerquery")
-        print(queryset)
+        model = self.queryset.__dict__["model"] 
 
         if not self.request.user.is_superuser:
             instance = model()
@@ -17,9 +15,7 @@ class UserAccessMixin:
                     queryset = queryset.filter(facility__district=self.request.user.district)
             else:
                 if hasattr(instance, "created_by"):
-                    queryset = queryset.filter(created_by=self.request.user)
-                    print("innerquery")
-                    print(queryset)
+                    queryset = queryset.filter(created_by=self.request.user)                   
 
         return queryset
 
